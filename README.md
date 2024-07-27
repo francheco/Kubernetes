@@ -13,6 +13,13 @@ https://www.youtube.com/watch?v=Cw9QoeAHjIQ
 
 https://www.youtube.com/watch?v=y3WTwzx5ABk
 
+https://kubernetes.io/
+
+https://sweworld.net/cheatsheets/minikube/
+
+
+
+
 
 
 

@@ -1,0 +1,38 @@
+
+
+apiVersion: apps/v1                        # API version for Deployment resource
+kind: Deployment                            # Resource type
+metadata:                                   # Metadata about the Deployment
+  name: mongo-express                       # Name of the Deployment
+  namespace: mongo                          # Namespace where Deployment is created
+spec:                                       # Specification for the desired state
+  replicas: 1                               # Number of instances of the Pod
+  selector:                                 # Selector to identify Pods
+    matchLabels:
+      app: mongo-express                    # Label for matching Pods
+  template:                                 # Template for creating Pods
+    metadata:                               # Metadata for the Pod
+      labels:                               # Labels assigned to Pods
+        app: mongo-express                  # The same label for matching
+    spec:                                   # Specification for container
+      containers:                           # List of containers in this Pod
+        - name: mongo-express               # Container name
+          image: mongo-express:latest       # Docker image to use for this container
+          ports:                            # Ports exposed by the container
+            - containerPort: 8081           # Exposed port for Mongo Express
+          env:                              # Environment variables for the container
+            - name: ME_CONFIG_MONGODB_SERVER # MongoDB server address that Mongo Express will connect to
+              valueFrom:
+                configMapKeyRef:
+                  name: mongo-express-config  # Name of the ConfigMap
+                  key: ME_CONFIG_MONGODB_SERVER  # Key in ConfigMap to use
+            - name: ME_CONFIG_MONGODB_ADMIN_USERNAME # Express admin username from the secret
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-express-secret  # Name of the secret
+                  key: express-username      # Key in secret to use
+            - name: ME_CONFIG_MONGODB_ADMIN_PASSWORD # Express admin password from the secret
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-express-secret  # Name of the secret
+                  key: express-password      # Key in secret to use

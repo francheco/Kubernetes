@@ -1,0 +1,10 @@
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-express-config
+  namespace: mongo
+data:
+  ME_CONFIG_MONGODB_SERVER: "mongo"    # MongoDB server address that Mongo Express will connect to
+

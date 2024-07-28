@@ -1,0 +1,39 @@
+
+
+apiVersion: apps/v1                # API version for Deployment resource
+kind: Deployment                    # Resource type
+metadata:                           # Metadata about the Deployment
+  name: mongo                       # Name of the Deployment
+  namespace: mongo                  # Namespace where Deployment is created
+spec:                               # Specification for the desired state
+  replicas: 1                       # Number of instances of the Pod
+  selector:                         # Selector to identify Pods
+    matchLabels:
+      app: mongo                    # Label key-value pair used for selection
+  template:                         # Template for creating Pods
+    metadata:                       # Metadata for the Pod
+      labels:                       # Labels assigned to Pods
+        app: mongo                  # The same label for matching
+    spec:                           # Specification for container
+      containers:                   # List of containers in this Pod
+        - name: mongo               # Container name
+          image: mongo:latest       # Docker image to use for this container
+          ports:                    # Ports exposed by the container
+            - containerPort: 27017  # Exposed port for MongoDB
+          env:                      # Environment variables for the container
+            - name: MONGO_INITDB_ROOT_USERNAME  # MongoDB username from the secret
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret           # Name of the secret
+                  key: mongodb-username        # Key in secret to use
+            - name: MONGO_INITDB_ROOT_PASSWORD  # MongoDB password from the secret
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret           # Name of the secret
+                  key: mongodb-password        # Key in secret to use
+          volumeMounts:             # Define where the volumes should be mounted in the container
+            - name: mongo-storage     # Volume name to mount
+              mountPath: /data/db     # Path in the container where MongoDB stores data
+      volumes:                      # Volumes available for the containers
+        - name: mongo-storage       # Name of the volume
+          emptyDir: {}              # Type of volume; emptyDir lives as long as the Pod where it is mounted
